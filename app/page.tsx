@@ -26,13 +26,22 @@ export default function HomePage() {
             </Link>
           </nav>
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              className="bg-white border-[#F2BED1] text-[#F2BED1] hover:bg-[#F2BED1] hover:text-white"
-            >
-              Sign In
-            </Button>
-            <Button className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800">Get Started</Button>
+            <Link href="/signin">
+              <Button
+                variant="outline"
+                className="bg-white border-[#F2BED1] text-[#F2BED1] hover:bg-[#F2BED1] hover:text-white cursor-pointer"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/get-started">
+              <Button
+                variant="outline"
+                className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 cursor-pointer"
+              >
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -50,10 +59,16 @@ export default function HomePage() {
             ones. A secure digital diary and message vault for what matters most.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-8 py-3">
-              <Camera className="mr-2 h-5 w-5" />
-              Start with Face ID
-            </Button>
+            <Link href="/face-id">
+              <Button
+                variant="outline"
+                size="lg"
+                className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-8 py-3 cursor-pointer"
+              >
+                <Camera className="mr-2 h-5 w-5" />
+                Start with Face ID
+              </Button>
+            </Link>
             <Button
               size="lg"
               variant="outline"
