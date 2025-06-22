@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -24,10 +25,12 @@ export default function DashboardPage() {
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
-            <Button variant="outline" size="sm" className="bg-white border-gray-300 text-gray-600 hover:bg-gray-100">
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
-            </Button>
+            <Link href="/signin">
+              <Button variant="outline" size="sm" className="bg-white border-gray-300 text-gray-600 hover:bg-gray-100">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -108,10 +111,12 @@ export default function DashboardPage() {
                   Create your first note to begin building your digital legacy. Your thoughts and memories, preserved
                   forever.
                 </p>
-                <Button className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-8">
-                  <Plus className="mr-2 h-5 w-5" />
-                  Create First Note
-                </Button>
+                <Link href="/get-started">
+                  <Button className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-8">
+                    <Plus className="mr-2 h-5 w-5" />
+                    Create First Note
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
@@ -138,13 +143,15 @@ export default function DashboardPage() {
                   <Users className="mr-2 h-4 w-4" />
                   Add Recipients
                 </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start bg-white border-[#F2BED1]/30 text-gray-700 hover:bg-[#F8E8EE]"
-                >
-                  <Lock className="mr-2 h-4 w-4" />
-                  Time Capsule
-                </Button>
+                <Link href="/face-id" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start bg-white border-[#F2BED1]/30 text-gray-700 hover:bg-[#F8E8EE]"
+                  >
+                    <Lock className="mr-2 h-4 w-4" />
+                    Time Capsule
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
