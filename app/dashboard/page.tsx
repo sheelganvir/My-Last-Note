@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge"
 import { Heart, Plus, Calendar, Users, Lock, Settings, LogOut } from "lucide-react"
 
 export default function DashboardPage() {
-  
   return (
     <div className="min-h-screen bg-[#F9F5F6]">
       {/* Header */}
