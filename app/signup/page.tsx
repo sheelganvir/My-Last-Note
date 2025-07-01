@@ -23,7 +23,6 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreeToTerms, setAgreeToTerms] = useState(false)
-  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const router = useRouter()
@@ -58,7 +57,6 @@ export default function SignUpPage() {
       newErrors.confirmPassword = "Passwords do not match"
     }
     if (!agreeToTerms) newErrors.terms = "You must agree to the Terms of Service"
-    if (!agreeToPrivacy) newErrors.privacy = "You must agree to the Privacy Policy"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -79,49 +77,49 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F5F6] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-6">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FDCEDF]/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#F8E8EE]/30 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#F2BED1]/10 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#F2BED1]/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FDCEDF]/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#F2BED1]/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative w-full max-w-lg">
+      <div className="relative w-full max-w-md mx-auto">
         {/* Back to home link */}
         <Link
-          href="/get-started"
-          className="inline-flex items-center gap-2 text-[#F2BED1] hover:text-gray-700 transition-colors mb-6 group"
+          href="/"
+          className="inline-flex items-center gap-2 text-[#F2BED1] hover:text-white transition-colors mb-6 group"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back
+          Back to Home
         </Link>
 
-        <Card className="bg-white/80 backdrop-blur-sm border-[#F2BED1]/20 shadow-xl">
-          <CardHeader className="text-center space-y-4">
+        <Card className="bg-slate-800/80 backdrop-blur-sm border-slate-700 shadow-xl">
+          <CardHeader className="text-center space-y-3">
             <div className="flex justify-center">
-              <div className="w-16 h-16 bg-[#FDCEDF] rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 bg-[#F2BED1]/20 rounded-full flex items-center justify-center">
                 <Heart className="h-8 w-8 text-[#F2BED1]" />
               </div>
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold text-gray-800">Create Your Account</CardTitle>
-              <CardDescription className="text-gray-600 mt-2">
+              <CardTitle className="text-2xl font-bold text-white">Create Your Account</CardTitle>
+              <CardDescription className="text-slate-300 mt-2">
                 Start your digital legacy journey with a secure account
               </CardDescription>
             </div>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <CardContent className="p-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                  <Label htmlFor="firstName" className="text-slate-300 font-medium">
                     First Name
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
                       id="firstName"
                       name="firstName"
@@ -129,16 +127,16 @@ export default function SignUpPage() {
                       placeholder="John"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className={`pl-10 border-[#F2BED1]/30 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-white/50 ${
-                        errors.firstName ? "border-red-300 focus:border-red-500" : ""
+                      className={`pl-10 border-slate-600 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-slate-700/50 text-white placeholder:text-slate-400 ${
+                        errors.firstName ? "border-red-400 focus:border-red-400" : ""
                       }`}
                     />
                   </div>
-                  {errors.firstName && <p className="text-xs text-red-500">{errors.firstName}</p>}
+                  {errors.firstName && <p className="text-xs text-red-400">{errors.firstName}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                  <Label htmlFor="lastName" className="text-slate-300 font-medium">
                     Last Name
                   </Label>
                   <Input
@@ -148,21 +146,21 @@ export default function SignUpPage() {
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className={`border-[#F2BED1]/30 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-white/50 ${
-                      errors.lastName ? "border-red-300 focus:border-red-500" : ""
+                    className={`border-slate-600 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-slate-700/50 text-white placeholder:text-slate-400 ${
+                      errors.lastName ? "border-red-400 focus:border-red-400" : ""
                     }`}
                   />
-                  {errors.lastName && <p className="text-xs text-red-500">{errors.lastName}</p>}
+                  {errors.lastName && <p className="text-xs text-red-400">{errors.lastName}</p>}
                 </div>
               </div>
 
               {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 font-medium">
+                <Label htmlFor="email" className="text-slate-300 font-medium">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     id="email"
                     name="email"
@@ -170,21 +168,21 @@ export default function SignUpPage() {
                     placeholder="john@example.com"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`pl-10 border-[#F2BED1]/30 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-white/50 ${
-                      errors.email ? "border-red-300 focus:border-red-500" : ""
+                    className={`pl-10 border-slate-600 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-slate-700/50 text-white placeholder:text-slate-400 ${
+                      errors.email ? "border-red-400 focus:border-red-400" : ""
                     }`}
                   />
                 </div>
-                {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                {errors.email && <p className="text-xs text-red-400">{errors.email}</p>}
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">
+                <Label htmlFor="password" className="text-slate-300 font-medium">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     id="password"
                     name="password"
@@ -192,28 +190,28 @@ export default function SignUpPage() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`pl-10 pr-10 border-[#F2BED1]/30 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-white/50 ${
-                      errors.password ? "border-red-300 focus:border-red-500" : ""
+                    className={`pl-10 pr-10 border-slate-600 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-slate-700/50 text-white placeholder:text-slate-400 ${
+                      errors.password ? "border-red-400 focus:border-red-400" : ""
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F2BED1] transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F2BED1] transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+                {errors.password && <p className="text-xs text-red-400">{errors.password}</p>}
               </div>
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                <Label htmlFor="confirmPassword" className="text-slate-300 font-medium">
                   Confirm Password
                 </Label>
                 <div className="relative">
-                  <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -221,19 +219,19 @@ export default function SignUpPage() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`pl-10 pr-10 border-[#F2BED1]/30 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-white/50 ${
-                      errors.confirmPassword ? "border-red-300 focus:border-red-500" : ""
+                    className={`pl-10 pr-10 border-slate-600 focus:border-[#F2BED1] focus:ring-[#F2BED1]/20 bg-slate-700/50 text-white placeholder:text-slate-400 ${
+                      errors.confirmPassword ? "border-red-400 focus:border-red-400" : ""
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F2BED1] transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F2BED1] transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && <p className="text-xs text-red-400">{errors.confirmPassword}</p>}
               </div>
 
               {/* Terms and Privacy Checkboxes */}
@@ -246,38 +244,16 @@ export default function SignUpPage() {
                       setAgreeToTerms(checked as boolean)
                       if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }))
                     }}
-                    className="mt-1 border-[#F2BED1] data-[state=checked]:bg-[#F2BED1] data-[state=checked]:border-[#F2BED1]"
+                    className="mt-1 border-slate-600 data-[state=checked]:bg-[#F2BED1] data-[state=checked]:border-[#F2BED1]"
                   />
                   <div className="space-y-1">
-                    <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed cursor-pointer">
+                    <Label htmlFor="terms" className="text-sm text-slate-300 leading-relaxed cursor-pointer">
                       I agree to the{" "}
-                      <Link href="/terms" className="text-[#F2BED1] hover:text-gray-700 underline">
+                      <Link href="/terms" className="text-[#F2BED1] hover:text-white underline">
                         Terms of Service
                       </Link>
                     </Label>
-                    {errors.terms && <p className="text-xs text-red-500">{errors.terms}</p>}
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="privacy"
-                    checked={agreeToPrivacy}
-                    onCheckedChange={(checked) => {
-                      setAgreeToPrivacy(checked as boolean)
-                      if (errors.privacy) setErrors((prev) => ({ ...prev, privacy: "" }))
-                    }}
-                    className="mt-1 border-[#F2BED1] data-[state=checked]:bg-[#F2BED1] data-[state=checked]:border-[#F2BED1]"
-                  />
-                  <div className="space-y-1">
-                    <Label htmlFor="privacy" className="text-sm text-gray-700 leading-relaxed cursor-pointer">
-                      I agree to the{" "}
-                      <Link href="/privacy" className="text-[#F2BED1] hover:text-gray-700 underline">
-                        Privacy Policy
-                      </Link>{" "}
-                      and understand my data will be encrypted
-                    </Label>
-                    {errors.privacy && <p className="text-xs text-red-500">{errors.privacy}</p>}
+                    {errors.terms && <p className="text-xs text-red-400">{errors.terms}</p>}
                   </div>
                 </div>
               </div>
@@ -286,11 +262,11 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 font-medium py-3 transition-all duration-200 hover:shadow-lg disabled:opacity-50 mt-6"
+                className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 font-medium py-3 transition-all duration-200 hover:shadow-lg disabled:opacity-50 mt-4 cursor-pointer"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
                     Creating Account...
                   </div>
                 ) : (
@@ -300,10 +276,10 @@ export default function SignUpPage() {
             </form>
 
             {/* Sign In Link */}
-            <div className="mt-8 pt-6 border-t border-[#F2BED1]/20 text-center">
-              <p className="text-gray-600 text-sm">
+            <div className="mt-8 pt-6 border-t border-slate-700 text-center">
+              <p className="text-slate-300 text-sm">
                 Already have an account?{" "}
-                <Link href="/signin" className="text-[#F2BED1] hover:text-gray-700 font-medium transition-colors">
+                <Link href="/signin" className="text-[#F2BED1] hover:text-white font-medium transition-colors">
                   Sign in here
                 </Link>
               </p>
@@ -312,12 +288,12 @@ export default function SignUpPage() {
         </Card>
 
         {/* Security Features */}
-        <div className="mt-6 bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-[#F2BED1]/20">
+        <div className="mt-4 bg-slate-800/60 backdrop-blur-sm rounded-lg p-3 border border-slate-700">
           <div className="flex items-center gap-3 mb-3">
             <Shield className="h-5 w-5 text-[#F2BED1]" />
-            <h3 className="font-medium text-gray-800">Your Security Matters</h3>
+            <h3 className="font-medium text-white">Your Security Matters</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-gray-600">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-300">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span>AES-256 Encryption</span>

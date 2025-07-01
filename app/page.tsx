@@ -112,7 +112,9 @@ export default function HomePage() {
             </Link>
           </nav>
           <Link href="/signin">
-            <Button className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 font-medium">Sign in</Button>
+            <Button className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 font-medium cursor-pointer">
+              Sign in
+            </Button>
           </Link>
         </div>
       </header>
@@ -138,14 +140,14 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/signup">
-                  <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3">
+                  <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3 cursor-pointer">
                     Get Started
                   </Button>
                 </Link>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-600 text-slate-300 hover:bg-slate-800 bg-transparent"
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 bg-transparent cursor-pointer"
                 >
                   Watch Demo
                 </Button>
@@ -197,7 +199,8 @@ export default function HomePage() {
                 <div>
                   <h4 className="text-xl font-semibold mb-2">Write a note</h4>
                   <p className="text-slate-300">
-                    Create secure notes with passwords and private information you&apos;d like to share with your loved ones.
+                    Create secure notes with passwords and private information you&apos;d like to share with your loved
+                    ones.
                   </p>
                 </div>
               </div>
@@ -221,8 +224,8 @@ export default function HomePage() {
                 <div>
                   <h4 className="text-xl font-semibold mb-2">Check in</h4>
                   <p className="text-slate-300">
-                    We&apos;ll send you regular reminders to check in. If you don&apos;t respond, your notes will be delivered to
-                    your recipients.
+                    We&apos;ll send you regular reminders to check in. If you don&apos;t respond, your notes will be
+                    delivered to your recipients.
                   </p>
                 </div>
               </div>
@@ -291,8 +294,8 @@ export default function HomePage() {
                 until you aren&apos;t
               </h4>
               <p className="text-slate-300 leading-relaxed">
-                You stay in control until everything. Your notes stay private until you&apos;re gone. You can change your
-                mind, edit your notes, or cancel delivery at any time. We only act when you can&apos;t.
+                You stay in control until everything. Your notes stay private until you&apos;re gone. You can change
+                your mind, edit your notes, or cancel delivery at any time. We only act when you can&apos;t.
               </p>
             </div>
           </div>
@@ -303,15 +306,16 @@ export default function HomePage() {
                 Regular <span className="text-[#F2BED1]">Reminders</span>
               </h4>
               <p className="text-slate-300 leading-relaxed">
-                Life is busy, and we get it. That&apos;s why we&apos;ll remind you to check back in regularly. If you go too long
-                without checking in, we&apos;ll send your notes to your recipients.
+                Life is busy, and we get it. That&apos;s why we&apos;ll remind you to check back in regularly. If you go
+                too long without checking in, we&apos;ll send your notes to your recipients.
               </p>
             </div>
             <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
               <div className="bg-slate-700 rounded-lg p-4">
                 <p className="text-sm font-medium text-white mb-2">Reminder Schedule</p>
                 <p className="text-xs text-slate-300">
-                  &amp;quot;Hi! We just wanted to check in and see how you&amp;apos;re doing. Please log in to confirm you&amp;apos;re okay.&amp;quot;
+                  &amp;quot;Hi! We just wanted to check in and see how you&amp;apos;re doing. Please log in to confirm
+                  you&amp;apos;re okay.&amp;quot;
                 </p>
               </div>
             </div>
@@ -334,8 +338,8 @@ export default function HomePage() {
                 <span className="text-[#F2BED1]">Automatic</span> Delivery
               </h4>
               <p className="text-slate-300 leading-relaxed">
-                here is no manual action needed from your loved ones. We&apos;ll automatically send your notes when the time
-                comes, so you can rest easy knowing your legacy is secure.
+                here is no manual action needed from your loved ones. We&apos;ll automatically send your notes when the
+                time comes, so you can rest easy knowing your legacy is secure.
               </p>
             </div>
           </div>
@@ -346,8 +350,8 @@ export default function HomePage() {
                 <span className="text-[#F2BED1]">Secure</span> by-default
               </h4>
               <p className="text-slate-300 leading-relaxed">
-                We store your sensitive information using industry-standard encryption. It&apos;s the same standard used by
-                financial institutions and governments to protect their most sensitive data.
+                We store your sensitive information using industry-standard encryption. It&apos;s the same standard used
+                by financial institutions and governments to protect their most sensitive data.
               </p>
             </div>
             <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
@@ -382,9 +386,9 @@ export default function HomePage() {
                   ))}
                 </div>
                 <p className="text-slate-300 mb-4">
-                  &amp;quot;My Last Note has given me incredible peace of mind. Knowing that my family will have access to
-                  important information when I&amp;apos;m gone is priceless. The interface is intuitive and the security features
-                  are top-notch.&amp;quot;
+                  &amp;quot;My Last Note has given me incredible peace of mind. Knowing that my family will have access
+                  to important information when I&amp;apos;m gone is priceless. The interface is intuitive and the
+                  security features are top-notch.&amp;quot;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#F2BED1] rounded-full flex items-center justify-center">
@@ -406,9 +410,9 @@ export default function HomePage() {
                   ))}
                 </div>
                 <p className="text-slate-300 mb-4">
-                  &amp;quot;As a tech professional, I appreciate the robust security measures. The encryption is solid, and I
-                  love that I can schedule different notes for different people. It&amp;apos;s like having a digital will that
-                  actually works.&amp;quot;
+                  &amp;quot;As a tech professional, I appreciate the robust security measures. The encryption is solid,
+                  and I love that I can schedule different notes for different people. It&amp;apos;s like having a
+                  digital will that actually works.&amp;quot;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#F2BED1] rounded-full flex items-center justify-center">
@@ -460,7 +464,9 @@ export default function HomePage() {
                 </li>
               </ul>
               <Link href="/signup">
-                <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900">Get Started</Button>
+                <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 cursor-pointer">
+                  Get Started
+                </Button>
               </Link>
             </CardContent>
           </Card>
@@ -486,7 +492,7 @@ export default function HomePage() {
           </h3>
           <p className="text-slate-300 text-lg mb-8">Today may not be the day, but someday will be.</p>
           <Link href="/signup">
-            <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4">
+            <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4 cursor-pointer">
               Start a note for the ones you care about
             </Button>
           </Link>
