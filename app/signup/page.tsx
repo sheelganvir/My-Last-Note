@@ -73,7 +73,7 @@ export default function SignUpPage() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     // Redirect to dashboard
-    router.push("/dashboard")
+    router.push("/notes")
   }
 
   return (

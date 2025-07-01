@@ -26,7 +26,7 @@ export default function SignInPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
     // Redirect to dashboard
-    router.push("/dashboard")
+    router.push("/notes")
   }
 
   return (
