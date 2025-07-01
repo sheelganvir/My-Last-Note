@@ -138,7 +138,7 @@ export default function SignInPage() {
 
         {/* Security note */}
         <div className="mt-6 text-center">
-          <p className="text-xs text-gray-500">Your data is protected with bank-level encryption</p>
+          <p className="text-xs text-gray-500">Your data is protected with multi-factor authentication</p>
         </div>
       </div>
     </div>

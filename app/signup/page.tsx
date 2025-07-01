@@ -74,8 +74,8 @@ export default function SignUpPage() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // Redirect to face ID setup or dashboard
-    router.push("/face-id")
+    // Redirect to dashboard
+    router.push("/dashboard")
   }
 
   return (
@@ -324,7 +324,7 @@ export default function SignUpPage() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Face ID Authentication</span>
+              <span>Multi-Factor Authentication</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>

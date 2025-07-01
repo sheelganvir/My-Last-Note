@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   <Users className="mr-2 h-4 w-4" />
                   Add Recipients
                 </Button>
-                <Link href="/face-id" className="w-full">
+                <Link href="/signin" className="w-full">
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-white border-[#F2BED1]/30 text-gray-700 hover:bg-[#F8E8EE] text-sm py-2"
@@ -169,7 +169,7 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Face ID</span>
+                    <span className="text-sm text-gray-600">Authentication</span>
                     <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs px-2 py-1">Active</Badge>
                   </div>
                   <div className="flex items-center justify-between">
