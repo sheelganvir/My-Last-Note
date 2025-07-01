@@ -1,272 +1,572 @@
+"use client"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Lock, Calendar, Users, Shield, Clock, Camera } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Heart, Check, Shield, Star, ChevronDown } from "lucide-react"
 import Link from "next/link"
+
+function FAQSection() {
+  const [expandedItems, setExpandedItems] = useState<number[]>([])
+
+  const toggleItem = (index: number) => {
+    setExpandedItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
+  }
+
+  const faqs = [
+    {
+      question: "What is a check?",
+      answer:
+        "A check is a regular reminder we send to confirm you're still active. If you don't respond after multiple attempts, we'll deliver your notes to your recipients.",
+    },
+    {
+      question: "Why can't it be free?",
+      answer:
+        "Running secure infrastructure costs money. We charge a one-time fee to ensure we can maintain the service long-term without relying on ads or selling your data.",
+    },
+    {
+      question: "How will they receive my notes?",
+      answer:
+        "Your recipients will receive an email notification with instructions on how to access their notes securely through our platform.",
+    },
+    {
+      question: "Can they see my notes before I'm deceased?",
+      answer:
+        "No, your notes remain completely private and encrypted until our verification process confirms delivery should occur.",
+    },
+    {
+      question: "What do you mean by check-in?",
+      answer:
+        "We'll send you periodic reminders (monthly, quarterly, or annually) asking you to confirm you're okay. This prevents accidental delivery.",
+    },
+    {
+      question: "What is a check-in period?",
+      answer:
+        "This is how often we'll ask you to confirm you're still active. You can choose from monthly, quarterly, or annual check-ins.",
+    },
+    {
+      question: "What happens if you go out of business but I want my notes delivered?",
+      answer:
+        "We have contingency plans in place, including data export options and partnerships to ensure your notes can still be delivered even if our service ends.",
+    },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {faqs.map((faq, index) => {
+        const isExpanded = expandedItems.includes(index)
+        return (
+          <Card
+            key={index}
+            className="bg-slate-800 border-slate-700 overflow-hidden cursor-pointer hover:bg-slate-700/50 transition-colors"
+            onClick={() => toggleItem(index)}
+          >
+            <CardHeader>
+              <CardTitle className="text-white flex items-center justify-between">
+                <span className="text-left">{faq.question}</span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 flex-shrink-0 ml-4 ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
+                />
+              </CardTitle>
+            </CardHeader>
+            <div
+              className={`transition-all duration-300 ease-in-out ${
+                isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              }`}
+              style={{
+                overflow: "hidden",
+              }}
+            >
+              <CardContent className="pt-0 pb-6">
+                <p className="text-slate-300 leading-relaxed">{faq.answer}</p>
+              </CardContent>
+            </div>
+          </Card>
+        )
+      })}
+    </div>
+  )
+}
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#F9F5F6]">
+    <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
-      <header className="border-b border-[#F2BED1]/20 bg-[#F8E8EE]/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Heart className="h-8 w-8 text-[#F2BED1]" />
-            <h1 className="text-2xl font-bold text-gray-800">My Last Note</h1>
+            <Heart className="h-6 w-6 text-[#F2BED1]" />
+            <h1 className="text-xl font-bold text-white">My Last Note</h1>
           </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-gray-600 hover:text-[#F2BED1] transition-colors">
-              Features
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="#how-it-works" className="text-slate-300 hover:text-white transition-colors">
+              How it works
             </Link>
-            <Link href="#how-it-works" className="text-gray-600 hover:text-[#F2BED1] transition-colors">
-              How It Works
+            <Link href="#pricing" className="text-slate-300 hover:text-white transition-colors">
+              Pricing
             </Link>
-            <Link href="#security" className="text-gray-600 hover:text-[#F2BED1] transition-colors">
-              Security
+            <Link href="#faq" className="text-slate-300 hover:text-white transition-colors">
+              FAQ
             </Link>
           </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/signin">
-              <Button
-                variant="outline"
-                className="bg-white border-[#F2BED1] text-[#F2BED1] hover:bg-[#F2BED1] hover:text-white cursor-pointer"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/get-started">
-              <Button
-                variant="outline"
-                className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 cursor-pointer"
-              >
-                Get Started
-              </Button>
-            </Link>
-          </div>
+          <Link href="/signin">
+            <Button className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 font-medium">Sign in</Button>
+          </Link>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center max-w-4xl">
-          <Badge className="mb-6 bg-[#FDCEDF] text-gray-700 hover:bg-[#F2BED1]">Secure Digital Legacy Platform</Badge>
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-            Your Words,
-            <span className="text-[#F2BED1]"> Forever</span>
-          </h2>
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Write personal notes that stay private during your lifetime, then become a meaningful legacy for your loved
-            ones. A secure digital diary and message vault for what matters most.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/face-id">
-              <Button
-                variant="outline"
-                size="lg"
-                className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-8 py-3 cursor-pointer"
-              >
-                <Camera className="mr-2 h-5 w-5" />
-                Start with Face ID
-              </Button>
-            </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="bg-white border-[#F2BED1] text-[#F2BED1] hover:bg-[#F2BED1] hover:text-white px-8 py-3"
-            >
-              Watch Demo
+      <section className="py-20 px-6 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-64 h-64 bg-[#F2BED1]/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#FDCEDF]/10 rounded-full blur-2xl"></div>
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                Leave a note for
+                <br />
+                your <span className="text-[#F2BED1]">loved ones</span>
+              </h2>
+              <p className="text-xl text-slate-300 mb-8 leading-relaxed">
+                Write your passwords, important information, and instructions. Share them with your loved ones when
+                you're gone.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/signup">
+                  <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3">
+                    Get Started
+                  </Button>
+                </Link>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 bg-transparent"
+                >
+                  Watch Demo
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-[#F2BED1]/20 to-[#FDCEDF]/20 rounded-2xl p-8 backdrop-blur-sm border border-[#F2BED1]/20">
+                  <div className="space-y-4">
+                    <div className="bg-[#F2BED1]/30 rounded-lg p-4 transform rotate-2">
+                      <div className="h-2 bg-[#F2BED1] rounded mb-2"></div>
+                      <div className="h-1 bg-[#F2BED1]/60 rounded mb-1"></div>
+                      <div className="h-1 bg-[#F2BED1]/40 rounded"></div>
+                    </div>
+                    <div className="bg-[#FDCEDF]/30 rounded-lg p-4 transform -rotate-1">
+                      <div className="h-2 bg-[#FDCEDF] rounded mb-2"></div>
+                      <div className="h-1 bg-[#FDCEDF]/60 rounded mb-1"></div>
+                      <div className="h-1 bg-[#FDCEDF]/40 rounded"></div>
+                    </div>
+                    <div className="bg-[#F8E8EE]/30 rounded-lg p-4 transform rotate-1">
+                      <div className="h-2 bg-[#F8E8EE] rounded mb-2"></div>
+                      <div className="h-1 bg-[#F8E8EE]/60 rounded mb-1"></div>
+                      <div className="h-1 bg-[#F8E8EE]/40 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works */}
+      <section id="how-it-works" className="py-20 px-6 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">
+              How <span className="text-[#F2BED1]">it works</span>
+            </h3>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div className="space-y-8">
+              <div className="flex gap-4">
+                <div className="w-8 h-8 bg-[#F2BED1] rounded-full flex items-center justify-center text-slate-900 font-bold text-sm flex-shrink-0 mt-1">
+                  1
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Write a note</h4>
+                  <p className="text-slate-300">
+                    Create secure notes with passwords and private information you'd like to share with your loved ones.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-8 h-8 bg-[#F2BED1] rounded-full flex items-center justify-center text-slate-900 font-bold text-sm flex-shrink-0 mt-1">
+                  2
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Add recipients</h4>
+                  <p className="text-slate-300">
+                    Choose who should receive your notes and when they should be delivered.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-8 h-8 bg-[#F2BED1] rounded-full flex items-center justify-center text-slate-900 font-bold text-sm flex-shrink-0 mt-1">
+                  3
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Check in</h4>
+                  <p className="text-slate-300">
+                    We'll send you regular reminders to check in. If you don't respond, your notes will be delivered to
+                    your recipients.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+              <p className="text-slate-300 leading-relaxed">
+                Your notes stay private and secure until you're gone. We use bank-level encryption to protect your
+                information, and our verification process ensures your notes are only delivered when intended. You
+                maintain complete control over your digital legacy, with the ability to edit, schedule, or delete notes
+                at any time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">
+              Store whatever is <span className="text-[#F2BED1]">important</span>
+            </h3>
+            <p className="text-slate-300 text-lg">Your digital legacy can include anything you want to share.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {[
+              "Passwords",
+              "Bank Details",
+              "Insurance",
+              "Crypto Keys",
+              "Love Letters",
+              "Instructions",
+              "Memories",
+              "Photos",
+              "Documents",
+              "Contacts",
+              "Wishes",
+              "Stories",
+            ].map((item, index) => (
+              <div key={index} className="bg-slate-800 rounded-lg px-4 py-2 text-center border border-slate-700">
+                <span className="text-slate-300">{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-slate-300">Online</span>
+                </div>
+                <div className="bg-slate-700 rounded-lg p-4">
+                  <p className="text-sm text-slate-300">Last check-in: 2 days ago</p>
+                  <p className="text-xs text-slate-400 mt-1">Next reminder: in 5 days</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-3xl font-bold mb-4">
+                <span className="text-[#F2BED1]">You are in control</span>
+                <br />
+                until you aren't
+              </h4>
+              <p className="text-slate-300 leading-relaxed">
+                You stay in control until everything. Your notes stay private until you're gone. You can change your
+                mind, edit your notes, or cancel delivery at any time. We only act when you can't.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            <div>
+              <h4 className="text-3xl font-bold mb-4">
+                Regular <span className="text-[#F2BED1]">Reminders</span>
+              </h4>
+              <p className="text-slate-300 leading-relaxed">
+                Life is busy, and we get it. That's why we'll remind you to check back in regularly. If you go too long
+                without checking in, we'll send your notes to your recipients.
+              </p>
+            </div>
+            <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+              <div className="bg-slate-700 rounded-lg p-4">
+                <p className="text-sm font-medium text-white mb-2">Reminder Schedule</p>
+                <p className="text-xs text-slate-300">
+                  "Hi! We just wanted to check in and see how you're doing. Please log in to confirm you're okay."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <Check className="h-6 w-6 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Automatic Delivery</p>
+                  <p className="text-xs text-slate-400">Verified and secure</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-3xl font-bold mb-4">
+                <span className="text-[#F2BED1]">Automatic</span> Delivery
+              </h4>
+              <p className="text-slate-300 leading-relaxed">
+                There is no manual action needed from your loved ones. We'll automatically send your notes when the time
+                comes, so you can rest easy knowing your legacy is secure.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h4 className="text-3xl font-bold mb-4">
+                <span className="text-[#F2BED1]">Secure</span> by-default
+              </h4>
+              <p className="text-slate-300 leading-relaxed">
+                We store your sensitive information using industry-standard encryption. It's the same standard used by
+                financial institutions and governments to protect their most sensitive data.
+              </p>
+            </div>
+            <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#F2BED1]/20 rounded-full flex items-center justify-center">
+                  <Shield className="h-6 w-6 text-[#F2BED1]" />
+                </div>
+                <div>
+                  <p className="font-medium">AES-256 Encryption</p>
+                  <p className="text-xs text-slate-400">Bank-level security</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-6 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">Used and loved by many</h3>
+            <p className="text-slate-300">A growing number of users are getting peace of mind.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="bg-slate-800 border-slate-700">
+              <CardContent className="p-8">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-500 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-300 mb-4">
+                  "My Last Note has given me incredible peace of mind. Knowing that my family will have access to
+                  important information when I'm gone is priceless. The interface is intuitive and the security features
+                  are top-notch."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#F2BED1] rounded-full flex items-center justify-center">
+                    <span className="text-slate-900 font-bold text-sm">SM</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">Sarah Mitchell</p>
+                    <p className="text-xs text-slate-400">Mother of two</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800 border-slate-700">
+              <CardContent className="p-8">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-500 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-300 mb-4">
+                  "As a tech professional, I appreciate the robust security measures. The encryption is solid, and I
+                  love that I can schedule different notes for different people. It's like having a digital will that
+                  actually works."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#F2BED1] rounded-full flex items-center justify-center">
+                    <span className="text-slate-900 font-bold text-sm">DK</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">David Kim</p>
+                    <p className="text-xs text-slate-400">Software Engineer</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-20 px-6">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h3 className="text-4xl font-bold mb-4">Clear Pricing</h3>
+          <p className="text-slate-300 mb-12">Simple, transparent pricing for peace of mind.</p>
+
+          <Card className="bg-slate-800 border-slate-700 max-w-md mx-auto">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <div className="text-5xl font-bold text-[#F2BED1] mb-2">$89</div>
+                <p className="text-slate-300">One-time payment</p>
+              </div>
+              <ul className="space-y-3 mb-8 text-left">
+                <li className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-slate-300">Unlimited notes</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-slate-300">Unlimited recipients</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-slate-300">Bank-level encryption</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-slate-300">Automatic delivery system</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-slate-300">Regular check-in reminders</span>
+                </li>
+              </ul>
+              <Link href="/signup">
+                <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900">Get Started</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-20 px-6 bg-slate-800/50">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">Frequently Asked Questions</h3>
+          </div>
+
+          <FAQSection />
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h3 className="text-4xl font-bold mb-4">
+            Don't leave it to <span className="text-[#F2BED1]">tomorrow</span>
+          </h3>
+          <p className="text-slate-300 text-lg mb-8">Today may not be the day, but someday will be.</p>
+          <Link href="/signup">
+            <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4">
+              Start a note for the ones you care about
             </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 bg-[#F8E8EE]/30">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-gray-800 mb-4">Thoughtfully Designed Features</h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Every feature is crafted with care, security, and emotional sensitivity in mind.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Camera className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Face Authentication</CardTitle>
-                <CardDescription>
-                  Secure login with facial recognition, backed by 2FA for ultimate protection.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Lock className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Private by Default</CardTitle>
-                <CardDescription>
-                  All notes start private with end-to-end encryption. You control when they become visible.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Calendar className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Smart Scheduling</CardTitle>
-                <CardDescription>
-                  Schedule notes for future dates, post-mortem release, or time capsule unlocking.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Users className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Recipient System</CardTitle>
-                <CardDescription>
-                  Assign specific notes to family members who get notified when messages are released.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Shield className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Death Verification</CardTitle>
-                <CardDescription>
-                  Trusted person uploads death certificate for secure, verified note release process.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white border-[#F2BED1]/20 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Clock className="h-12 w-12 text-[#F2BED1] mb-4" />
-                <CardTitle className="text-gray-800">Time Capsules</CardTitle>
-                <CardDescription>
-                  Lock notes for years into the future, creating meaningful time capsules for yourself or others.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-gray-800 mb-4">How It Works</h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              A simple, secure process designed with your privacy and legacy in mind.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#FDCEDF] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-gray-800">1</span>
-              </div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Secure Login</h4>
-              <p className="text-gray-600">Log in with face authentication and write your personal notes.</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#FDCEDF] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-gray-800">2</span>
-              </div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Set Recipients</h4>
-              <p className="text-gray-600">Choose who receives each note and when they should be delivered.</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#FDCEDF] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-gray-800">3</span>
-              </div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Verification</h4>
-              <p className="text-gray-600">Trusted person uploads death certificate for secure verification.</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#FDCEDF] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-gray-800">4</span>
-              </div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Legacy Delivered</h4>
-              <p className="text-gray-600">Notes are automatically released to recipients based on your wishes.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Security Section */}
-      <section id="security" className="py-20 px-4 bg-[#F8E8EE]/30">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <Shield className="h-16 w-16 text-[#F2BED1] mx-auto mb-6" />
-            <h3 className="text-4xl font-bold text-gray-800 mb-6">Bank-Level Security</h3>
-            <p className="text-xl text-gray-600 mb-8">
-              Your most personal thoughts deserve the highest level of protection. We use AES-256 encryption, secure
-              face authentication, and zero-knowledge architecture to keep your notes completely private.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div className="bg-white p-6 rounded-lg border border-[#F2BED1]/20">
-                <h4 className="font-semibold text-gray-800 mb-2">End-to-End Encryption</h4>
-                <p className="text-gray-600 text-sm">All notes encrypted with AES-256 before storage</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-[#F2BED1]/20">
-                <h4 className="font-semibold text-gray-800 mb-2">Zero-Knowledge</h4>
-                <p className="text-gray-600 text-sm">We cannot read your notes, even if we wanted to</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-[#F2BED1]/20">
-                <h4 className="font-semibold text-gray-800 mb-2">Biometric Security</h4>
-                <p className="text-gray-600 text-sm">Face ID with 2FA backup for secure access</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center max-w-3xl">
-          <h3 className="text-4xl font-bold text-gray-800 mb-6">Start Your Digital Legacy Today</h3>
-          <p className="text-xl text-gray-600 mb-8">
-            Join thousands who trust My Last Note to preserve their most meaningful messages for the people they love.
-          </p>
-          <Button size="lg" className="bg-[#FDCEDF] hover:bg-[#F2BED1] text-gray-800 px-12 py-4 text-lg">
-            <Heart className="mr-2 h-5 w-5" />
-            Create Your First Note
-          </Button>
+          </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#F8E8EE] py-12 px-4">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <Heart className="h-6 w-6 text-[#F2BED1]" />
-              <span className="text-lg font-semibold text-gray-800">My Last Note</span>
+      <footer className="bg-slate-900 border-t border-slate-800 py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Heart className="h-5 w-5 text-[#F2BED1]" />
+                <span className="font-semibold text-white">My Last Note</span>
+              </div>
+              <p className="text-slate-400 text-sm">Secure digital legacy platform for your most important messages.</p>
             </div>
-            <div className="flex gap-6 text-gray-600">
-              <Link href="#" className="hover:text-[#F2BED1] transition-colors">
-                Privacy
-              </Link>
-              <Link href="#" className="hover:text-[#F2BED1] transition-colors">
-                Terms
-              </Link>
-              <Link href="#" className="hover:text-[#F2BED1] transition-colors">
-                Support
-              </Link>
-              <Link href="#" className="hover:text-[#F2BED1] transition-colors">
-                Contact
-              </Link>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Product</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Security
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Pricing
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Support</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    FAQ
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Legal</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Privacy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Terms
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-white transition-colors">
+                    Security
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
-          <div className="border-t border-[#F2BED1]/20 mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2025 My Last Note by Sheel</p>
+          <div className="border-t border-slate-800 pt-8 text-center">
+            <p className="text-slate-400 text-sm">&copy; 2025 My Last Note by Sheel. All rights reserved.</p>
           </div>
         </div>
       </footer>
