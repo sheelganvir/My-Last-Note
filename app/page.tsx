@@ -94,33 +94,64 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-[#F2BED1]" />
-            <h1 className="text-xl font-bold text-white">My Last Note</h1>
+      <header>
+        <nav className="fixed inset-x-0 z-20 w-full border-b border-slate-700/30 bg-slate-900/80 backdrop-blur">
+          <div className="mx-auto px-4 sm:px-12 xl:max-w-6xl xl:px-0">
+            <div className="relative flex flex-wrap items-center justify-between gap-6 lg:gap-0 lg:py-4 mx-0 ">
+              {/* Logo */}
+              <div className="relative z-20 flex w-full justify-between md:px-0 lg:w-max ">
+                <Link href="/" className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-teal-500 rounded flex items-center justify-center mx-0">
+                    <Heart className="h-5 w-5 text-white" />
+                  </div>
+                  <b className="text-lg text-white mx-2">My Last Note</b>
+                </Link>
+
+                {/* Mobile hamburger */}
+                <button className="relative -mr-6 p-6 lg:hidden" aria-label="hamburger">
+                  <div className="m-auto h-0.5 w-5 rounded bg-white transition duration-300"></div>
+                  <div className="m-auto mt-2 h-0.5 w-5 rounded bg-white transition duration-300"></div>
+                </button>
+              </div>
+
+              {/* Navigation */}
+              <div className="invisible absolute top-full left-0 z-20 w-full origin-top-right translate-y-1 scale-90 flex-col flex-wrap justify-end gap-6 rounded-3xl border border-slate-700 bg-slate-800 p-8 opacity-0 shadow-2xl transition-all duration-300 lg:visible lg:relative lg:flex lg:w-auto lg:translate-y-0 lg:scale-100 lg:flex-row lg:items-center lg:gap-0 lg:border-none lg:bg-transparent lg:p-0 lg:opacity-100 lg:shadow-none">
+                <div className="text-slate-300 lg:pr-4">
+                  <ul className="space-y-6 text-base font-medium tracking-wide lg:flex lg:space-y-0 lg:text-sm">
+                    <li>
+                      <Link href="#how-it-works" className="block transition hover:text-teal-400 md:px-4">
+                        <span>How it works</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#pricing" className="block transition hover:text-teal-400 md:px-4">
+                        <span>Pricing</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#faq" className="block transition hover:text-teal-400 md:px-4">
+                        <span>FAQs</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Sign in button */}
+                <div className="mt-12 -ml-1 flex w-full flex-col space-y-2 sm:flex-row md:w-max lg:mt-0  lg:space-y-0">
+                  <Link href="/signin">
+                    <Button className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-6 py-2 rounded-md cursor-pointer">
+                      Sign in
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="#how-it-works" className="text-slate-300 hover:text-white transition-colors">
-              How it works
-            </Link>
-            <Link href="#pricing" className="text-slate-300 hover:text-white transition-colors">
-              Pricing
-            </Link>
-            <Link href="#faq" className="text-slate-300 hover:text-white transition-colors">
-              FAQ
-            </Link>
-          </nav>
-          <Link href="/signin">
-            <Button className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 font-medium cursor-pointer">
-              Sign in
-            </Button>
-          </Link>
-        </div>
+        </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-6 relative overflow-hidden">
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-20 right-20 w-64 h-64 bg-[#F2BED1]/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#FDCEDF]/10 rounded-full blur-2xl"></div>
