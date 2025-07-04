@@ -1,34 +1,58 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import { ClerkProvider } from "@clerk/nextjs"
+import { dark } from "@clerk/themes"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "My Last Note",
-  description: "My Last Note is a secure digital diary and legacy message platform where you can write personal notes that stay private during your lifetime and become visible to your loved ones only after your death. With face authentication, death verification, and smart scheduling, your words live on — exactly how and when you choose.",
-};
+  title: "My Last Note - Digital Legacy Platform",
+  description: "Secure digital legacy platform for your most important messages",
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: {
+          colorPrimary: "#F2BED1",
+          colorBackground: "#0f172a",
+          colorInputBackground: "#334155",
+          colorInputText: "#ffffff",
+          colorText: "#ffffff",
+          colorTextSecondary: "#cbd5e1",
+        },
+        elements: {
+          formButtonPrimary: {
+            backgroundColor: "#F2BED1",
+            color: "#0f172a",
+            "&:hover": {
+              backgroundColor: "#FDCEDF",
+            },
+          },
+          card: {
+            backgroundColor: "#1e293b",
+            border: "1px solid #475569",
+          },
+          headerTitle: {
+            color: "#ffffff",
+          },
+          headerSubtitle: {
+            color: "#cbd5e1",
+          },
+        },
+      }}
+    >
+      <html lang="en">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </ClerkProvider>
+  )
 }

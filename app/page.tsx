@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Check, Shield, Star, ChevronDown } from "lucide-react"
 import Link from "next/link"
+import { useUser } from "@clerk/nextjs"
 
 function FAQSection() {
   const [expandedItems, setExpandedItems] = useState<number[]>([])
@@ -91,6 +92,8 @@ function FAQSection() {
 }
 
 export default function HomePage() {
+  const { isSignedIn } = useUser()
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
@@ -138,11 +141,19 @@ export default function HomePage() {
 
                 {/* Sign in button */}
                 <div className="mt-12 -ml-1 flex w-full flex-col space-y-2 sm:flex-row md:w-max lg:mt-0  lg:space-y-0">
-                  <Link href="/signin">
-                    <Button className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-6 py-2 rounded-md cursor-pointer">
-                      Sign in
-                    </Button>
-                  </Link>
+                  {isSignedIn ? (
+                    <Link href="/notes">
+                      <Button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-md cursor-pointer">
+                        Go to Notes
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link href="/sign-in">
+                      <Button className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-6 py-2 rounded-md cursor-pointer">
+                        Sign in
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -170,11 +181,25 @@ export default function HomePage() {
                 you&apos;re gone.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/signup">
-                  <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3 cursor-pointer">
-                    Get Started
-                  </Button>
-                </Link>
+                {isSignedIn ? (
+                  <Link href="/notes">
+                    <Button
+                      size="lg"
+                      className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3 cursor-pointer"
+                    >
+                      Go to Your Notes
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/sign-up">
+                    <Button
+                      size="lg"
+                      className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-8 py-3 cursor-pointer"
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                )}
                 <Button
                   size="lg"
                   variant="outline"
@@ -494,11 +519,19 @@ export default function HomePage() {
                   <span className="text-slate-300">Regular check-in reminders</span>
                 </li>
               </ul>
-              <Link href="/signup">
-                <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 cursor-pointer">
-                  Get Started
-                </Button>
-              </Link>
+              {isSignedIn ? (
+                <Link href="/notes">
+                  <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 cursor-pointer">
+                    Go to Your Notes
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/sign-up">
+                  <Button className="w-full bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 cursor-pointer">
+                    Get Started
+                  </Button>
+                </Link>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -522,11 +555,19 @@ export default function HomePage() {
             Don&apos;t leave it to <span className="text-[#F2BED1]">tomorrow</span>
           </h3>
           <p className="text-slate-300 text-lg mb-8">Today may not be the day, but someday will be.</p>
-          <Link href="/signup">
-            <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4 cursor-pointer">
-              Start a note for the ones you care about
-            </Button>
-          </Link>
+          {isSignedIn ? (
+            <Link href="/notes">
+              <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4 cursor-pointer">
+                Go to Your Notes
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/sign-up">
+              <Button size="lg" className="bg-[#F2BED1] hover:bg-[#FDCEDF] text-slate-900 px-12 py-4 cursor-pointer">
+                Start a note for the ones you care about
+              </Button>
+            </Link>
+          )}
         </div>
       </section>
 

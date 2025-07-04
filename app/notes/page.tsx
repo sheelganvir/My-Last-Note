@@ -5,9 +5,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { FileText, Menu, X } from "lucide-react"
+import { UserButton, useUser } from "@clerk/nextjs"
 
 export default function NotesPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user } = useUser()
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -84,16 +86,31 @@ export default function NotesPage() {
                   </ul>
                 </div>
 
-                {/* Action buttons */}
-                <div className="mt-12 -ml-1 flex w-full flex-col space-y-2 sm:flex-row md:w-max lg:mt-0 lg:mr-6 lg:space-y-0 lg:space-x-2">
-                  <Link href="/signin">
-                    <Button
-                      className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-6 py-2 rounded-md cursor-pointer w-full sm:w-auto"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Sign Out
-                    </Button>
-                  </Link>
+                {/* User Profile */}
+                <div className="mt-12 -ml-1 flex w-full flex-col space-y-2 sm:flex-row md:w-max lg:mt-0 lg:mr-6 lg:space-y-0 lg:space-x-4 items-center">
+                  {user && (
+                    <div className="hidden lg:block text-slate-300 text-sm">
+                      Welcome, {user.firstName || user.emailAddresses[0].emailAddress}
+                    </div>
+                  )}
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-8 h-8",
+                        userButtonPopoverCard: {
+                          backgroundColor: "#1e293b",
+                          border: "1px solid #475569",
+                        },
+                        userButtonPopoverActionButton: {
+                          color: "#ffffff",
+                          "&:hover": {
+                            backgroundColor: "#334155",
+                          },
+                        },
+                      },
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -107,7 +124,14 @@ export default function NotesPage() {
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="flex items-center justify-between mb-8">
-              <h1 className="text-2xl font-medium text-white">Your notes</h1>
+              <div>
+                <h1 className="text-2xl font-medium text-white">Your notes</h1>
+                {user && (
+                  <p className="text-slate-400 text-sm mt-1">
+                    Welcome back, {user.firstName || user.emailAddresses[0].emailAddress.split("@")[0]}
+                  </p>
+                )}
+              </div>
               <Button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-md cursor-pointer">
                 📄 New Note
               </Button>
@@ -120,6 +144,9 @@ export default function NotesPage() {
                   <Menu className="h-8 w-8 text-slate-400" />
                 </div>
                 <p className="text-slate-300 text-lg">You do not have any notes yet.</p>
+                <p className="text-slate-400 text-sm mt-2">
+                  Create your first note to begin building your digital legacy.
+                </p>
               </CardContent>
             </Card>
           </div>
