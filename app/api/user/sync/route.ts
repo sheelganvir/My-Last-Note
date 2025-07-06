@@ -42,63 +42,60 @@ export async function POST() {
   }
 }
 
-export async function PUT(request) {
+export async function PUT(_request: Request) {
   try {
-    const { userId } = await auth()
+    const { userId } = await auth();
 
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json()
-    const { email, firstName, lastName, checkInFrequency } = body
+    const body = await _request.json(); 
+    const { email, firstName, lastName, checkInFrequency } = body;
 
     if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 })
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    // Check if user exists
-    const existingUser = await getUserByClerkId(userId)
+    const existingUser = await getUserByClerkId(userId);
 
     if (existingUser) {
-      // Update existing user
       const updatedUser = await updateUser(userId, {
         email,
         firstName,
         lastName,
         checkInFrequency,
-      })
+      });
 
       return NextResponse.json({
         success: true,
         user: updatedUser,
         message: "User updated successfully",
-      })
+      });
     } else {
-      // Create new user
       const newUser = await createUser({
         clerkId: userId,
         email,
         firstName,
         lastName,
         checkInFrequency,
-      })
+      });
 
       return NextResponse.json({
         success: true,
         user: newUser,
         message: "User created successfully",
-      })
+      });
     }
   } catch (error) {
-    console.error("User creation/update error:", error)
+    console.error("User creation/update error:", error);
     return NextResponse.json(
       {
         success: false,
         error: "Failed to create/update user",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
-    )
+      { status: 500 }
+    );
   }
 }
