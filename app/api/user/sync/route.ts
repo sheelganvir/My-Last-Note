@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { createUser, getUserByClerkId, updateUser } from "@/lib/userService"
 
-export async function POST(request) {
+export async function POST() {
   try {
     const { userId } = await auth()
 
