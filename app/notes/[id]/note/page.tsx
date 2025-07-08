@@ -22,7 +22,7 @@ import {
   ArrowLeft,
 } from "lucide-react"
 import { useUser } from "@clerk/nextjs"
-import { useRouter, useParams } from "next/navigation"
+import { useParams } from "next/navigation"
 
 const suggestions = [
   "Important passwords",
@@ -342,7 +342,7 @@ export default function NoteEditorPage() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-medium text-white">Sensitive information:</h3>
                     <Link href="#" className="text-teal-400 text-sm hover:text-teal-300">
-                      How it's stored
+                      How it&apos;s stored
                     </Link>
                   </div>
 
