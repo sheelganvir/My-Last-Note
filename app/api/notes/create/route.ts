@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { noteId, title, status } = body
+    const { noteId } = body
 
     if (!noteId) {
       return NextResponse.json({ error: "Note ID is required" }, { status: 400 })

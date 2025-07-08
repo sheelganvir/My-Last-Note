@@ -10,16 +10,22 @@ import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 import { useUserSync } from "@/hooks/useUserSync"
 
+interface Recipient {
+  name: string
+  email: string
+}
+
 interface Note {
   id: string
   noteId: string
   title: string
   status: string
-  recipients: any[]
+  recipients: Recipient[]
   createdAt: string
   updatedAt: string
   isDelivered: boolean
 }
+
 
 export default function NotesPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

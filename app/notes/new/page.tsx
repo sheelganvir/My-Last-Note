@@ -247,7 +247,7 @@ export default function NewNotePage() {
                     ref={textAreaRef}
                     value={textNote}
                     onChange={(e) => setTextNote(e.target.value)}
-                    placeholder="Your note goes here. Don't hold back, write as much as you need to."
+                    placeholder="Your note goes here. Don&apos;t hold back, write as much as you need to."
                     className="min-h-[200px] bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 resize-none"
                   />
                 </div>
@@ -329,7 +329,7 @@ export default function NewNotePage() {
 
             {/* Save Section */}
             <div className="flex items-center justify-between">
-              <p className="text-slate-400 text-sm">Don't worry, you can update it any time you want.</p>
+              <p className="text-slate-400 text-sm">Don&apos;t worry, you can update it any time you want.</p>
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
