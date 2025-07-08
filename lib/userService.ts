@@ -11,11 +11,17 @@ export async function createUser(userData: CreateUserData): Promise<User> {
     ...userData,
     createdAt: new Date(),
     updatedAt: new Date(),
+    lastCheckIn: new Date(),
     checkInFrequency: userData.checkInFrequency || "monthly",
     isActive: true,
   }
 
+  console.log("Creating user with data:", newUser)
+
   const result = await collection.insertOne(newUser)
+
+  console.log("User created with ID:", result.insertedId)
+
   return { ...newUser, _id: result.insertedId }
 }
 
@@ -23,12 +29,20 @@ export async function getUserByClerkId(clerkId: string): Promise<User | null> {
   const db = await getDatabase()
   const collection = db.collection<User>(COLLECTION_NAME)
 
-  return await collection.findOne({ clerkId })
+  console.log("Looking for user with clerkId:", clerkId)
+
+  const user = await collection.findOne({ clerkId })
+
+  console.log("Found user:", user ? "Yes" : "No")
+
+  return user
 }
 
 export async function updateUser(clerkId: string, updateData: Partial<User>): Promise<User | null> {
   const db = await getDatabase()
   const collection = db.collection<User>(COLLECTION_NAME)
+
+  console.log("Updating user with clerkId:", clerkId, "Data:", updateData)
 
   const result = await collection.findOneAndUpdate(
     { clerkId },
@@ -40,6 +54,8 @@ export async function updateUser(clerkId: string, updateData: Partial<User>): Pr
     },
     { returnDocument: "after" },
   )
+
+  console.log("User update result:", result ? "Success" : "Not found")
 
   return result
 }

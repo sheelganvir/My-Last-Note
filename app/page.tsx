@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Check, Shield, Star, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { useUser } from "@clerk/nextjs"
+import { useUserSync } from "@/hooks/useUserSync"
 
 function FAQSection() {
   const [expandedItems, setExpandedItems] = useState<number[]>([])
@@ -93,6 +94,9 @@ function FAQSection() {
 
 export default function HomePage() {
   const { isSignedIn } = useUser()
+
+  // Sync user data when they're signed in
+  useUserSync()
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
