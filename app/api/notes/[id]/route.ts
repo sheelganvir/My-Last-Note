@@ -4,7 +4,11 @@ import { getUserByClerkId } from "@/lib/userService"
 import { getDatabase } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { id: string } },
+) {
+  const { params } = context
   try {
     const { userId } = await auth()
 
@@ -58,7 +62,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: { id: string } },
+) {
+  const { params } = context
   try {
     const { userId } = await auth()
 
