@@ -6,9 +6,9 @@ import { ObjectId } from "mongodb"
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } },
+  { params: paramsPromise }: { params: Promise<{ id: string }> },
 ) {
-  const { params } = context
+  const params = await paramsPromise
   try {
     const { userId } = await auth()
 
@@ -64,9 +64,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } },
+  { params: paramsPromise }: { params: Promise<{ id: string }> },
 ) {
-  const { params } = context
+  const params = await paramsPromise
   try {
     const { userId } = await auth()
 
