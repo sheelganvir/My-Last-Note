@@ -79,7 +79,26 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
 
     const contentType = request.headers.get("content-type")
 
-    let updateData: any = {}
+    interface UpdateData {
+      recipients?: any[]; // Consider defining a more specific type for recipients
+      title?: string;
+      status?: string;
+      content?: {
+        textNote: string;
+        sensitiveInfo: string;
+        attachments: Attachment[];
+      };
+      [key: string]: any; // For other settings
+    }
+
+    interface Attachment {
+      name: string;
+      type: string;
+      size: number;
+      data: string;
+    }
+
+    let updateData: UpdateData = {}
 
     if (contentType?.includes("application/json")) {
       // Handle JSON requests (for recipients and settings updates)

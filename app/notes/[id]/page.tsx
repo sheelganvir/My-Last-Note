@@ -14,6 +14,13 @@ interface Recipient {
   email: string
 }
 
+interface Attachment {
+  name: string;
+  type: string;
+  size: number;
+  data: string; // Assuming data is stored as a base64 string
+}
+
 interface Note {
   id: string
   noteId: string
@@ -26,7 +33,7 @@ interface Note {
   content?: {
     textNote: string
     sensitiveInfo: string
-    attachments: any[]
+    attachments: Attachment[]
   }
 }
 
@@ -127,7 +134,7 @@ export default function NoteOverviewPage() {
         minute: "2-digit",
         hour12: true,
       })
-    } catch (error) {
+    } catch {
       return "Invalid date"
     }
   }
