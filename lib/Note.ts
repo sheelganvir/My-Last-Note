@@ -8,9 +8,11 @@ export interface Recipient {
 
 export interface Note {
   _id?: ObjectId
+  noteId: string
   userId: ObjectId
   title: string
   content: string
+  status: string
   recipients: Recipient[]
   isEncrypted: boolean
   deliveryTrigger: "manual" | "automatic" | "scheduled"
