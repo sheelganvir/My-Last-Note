@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { getUserByClerkId } from "@/lib/userService"
 import { getDatabase } from "@/lib/mongodb"
+import { type Recipient } from "@/lib/Note"
 import { ObjectId } from "mongodb"
 
 export async function GET(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
@@ -80,7 +81,7 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
     const contentType = request.headers.get("content-type")
 
     interface UpdateData {
-      recipients?: any[]; // Consider defining a more specific type for recipients
+      recipients?: Recipient[];
       title?: string;
       status?: string;
       content?: {
@@ -88,7 +89,11 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
         sensitiveInfo: string;
         attachments: Attachment[];
       };
-      [key: string]: any; // For other settings
+      isEncrypted?: boolean;
+      deliveryTrigger?: "manual" | "automatic" | "scheduled";
+      scheduledDelivery?: Date;
+      tags?: string[];
+      priority?: "low" | "medium" | "high";
     }
 
     interface Attachment {
