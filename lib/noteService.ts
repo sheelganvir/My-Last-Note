@@ -1,6 +1,7 @@
 import { getDatabase } from "@/lib/mongodb"
 import type { Note, CreateNoteData } from "@/lib/Note"
 import { ObjectId } from "mongodb"
+import { v4 as uuidv4 } from "uuid"
 
 const COLLECTION_NAME = "notes"
 
@@ -10,12 +11,14 @@ export async function createNote(noteData: CreateNoteData): Promise<Note> {
 
   const newNote: Omit<Note, "_id"> = {
     ...noteData,
+    noteId: uuidv4(), // Generate UUID for the note
     isEncrypted: false, // You can implement encryption later
     deliveryTrigger: noteData.deliveryTrigger || "automatic",
     isDelivered: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     priority: noteData.priority || "medium",
+    status: "draft", // Default status
   }
 
   const result = await collection.insertOne(newNote)

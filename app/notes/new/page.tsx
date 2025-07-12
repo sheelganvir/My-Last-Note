@@ -160,9 +160,6 @@ export default function NewNotePage() {
                 <Link href="/notes" className="text-slate-300 hover:text-white transition-colors">
                   Notes
                 </Link>
-                <Link href="/account" className="text-slate-300 hover:text-white transition-colors">
-                  Your Account
-                </Link>
               </div>
             </div>
           </div>
@@ -300,6 +297,8 @@ export default function NewNotePage() {
                     onChange={handleFileUpload}
                     className="hidden"
                     accept="image/*,application/pdf,.doc,.docx,.txt"
+                    title="Upload attachments"
+                    placeholder="Select files to upload"
                   />
 
                   {uploadedFiles.length > 0 && (

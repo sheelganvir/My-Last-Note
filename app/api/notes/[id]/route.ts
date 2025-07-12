@@ -4,10 +4,7 @@ import { getUserByClerkId } from "@/lib/userService"
 import { getDatabase } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 
-export async function GET(
-  request: NextRequest,
-  { params: paramsPromise }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const params = await paramsPromise
   try {
     const { userId } = await auth()
@@ -45,6 +42,7 @@ export async function GET(
         title: note.title,
         content: note.content,
         status: note.status,
+        recipients: note.recipients || [],
         createdAt: note.createdAt,
         updatedAt: note.updatedAt,
       },
@@ -62,10 +60,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params: paramsPromise }: { params: Promise<{ id: string }> },
-) {
+export async function PUT(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const params = await paramsPromise
   try {
     const { userId } = await auth()
@@ -82,46 +77,78 @@ export async function PUT(
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    const formData = await request.formData()
-    const title = formData.get("title") as string
-    const textNote = formData.get("textNote") as string
-    const sensitiveInfo = formData.get("sensitiveInfo") as string
+    const contentType = request.headers.get("content-type")
 
-    if (!title?.trim()) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 })
-    }
+    let updateData: any = {}
 
-    // Handle file uploads
-    const files: File[] = []
-    const fileEntries = Array.from(formData.entries()).filter(([key]) => key.startsWith("file_"))
+    if (contentType?.includes("application/json")) {
+      // Handle JSON requests (for recipients and settings updates)
+      const body = await request.json()
 
-    for (const [, file] of fileEntries) {
-      if (file instanceof File) {
-        files.push(file)
+      if (body.recipients !== undefined) {
+        updateData.recipients = body.recipients
       }
-    }
 
-    // Process files
-    const attachments = await Promise.all(
-      files.map(async (file) => {
-        const bytes = await file.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-        const base64 = buffer.toString("base64")
+      if (body.settings !== undefined) {
+        updateData = { ...updateData, ...body.settings }
+      }
 
-        return {
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          data: base64,
+      if (body.title !== undefined) {
+        updateData.title = body.title
+      }
+
+      if (body.status !== undefined) {
+        updateData.status = body.status
+      }
+    } else {
+      // Handle FormData requests (for note content updates)
+      const formData = await request.formData()
+      const title = formData.get("title") as string
+      const textNote = formData.get("textNote") as string
+      const sensitiveInfo = formData.get("sensitiveInfo") as string
+
+      if (!title?.trim()) {
+        return NextResponse.json({ error: "Title is required" }, { status: 400 })
+      }
+
+      // Handle file uploads
+      const files: File[] = []
+      const fileEntries = Array.from(formData.entries()).filter(([key]) => key.startsWith("file_"))
+
+      for (const [, file] of fileEntries) {
+        if (file instanceof File) {
+          files.push(file)
         }
-      }),
-    )
+      }
 
-    // Combine content
-    const content = {
-      textNote: textNote || "",
-      sensitiveInfo: sensitiveInfo || "",
-      attachments,
+      // Process files
+      const attachments = await Promise.all(
+        files.map(async (file) => {
+          const bytes = await file.arrayBuffer()
+          const buffer = Buffer.from(bytes)
+          const base64 = buffer.toString("base64")
+
+          return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: base64,
+          }
+        }),
+      )
+
+      // Combine content
+      const content = {
+        textNote: textNote || "",
+        sensitiveInfo: sensitiveInfo || "",
+        attachments,
+      }
+
+      updateData = {
+        title,
+        content,
+        status: "saved",
+      }
     }
 
     // Update note in database
@@ -135,9 +162,7 @@ export async function PUT(
       },
       {
         $set: {
-          title,
-          content,
-          status: "saved",
+          ...updateData,
           updatedAt: new Date(),
         },
       },
@@ -154,6 +179,7 @@ export async function PUT(
         id: result._id,
         noteId: result.noteId,
         title: result.title,
+        recipients: result.recipients || [],
         updatedAt: result.updatedAt,
       },
       message: "Note updated successfully",
@@ -164,6 +190,53 @@ export async function PUT(
       {
         success: false,
         error: "Failed to update note",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function DELETE(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const params = await paramsPromise
+  try {
+    const { userId } = await auth()
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const noteId = params.id
+
+    // Get user from database
+    const user = await getUserByClerkId(userId)
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
+
+    // Delete note from database
+    const db = await getDatabase()
+    const collection = db.collection("notes")
+
+    const result = await collection.deleteOne({
+      noteId,
+      userId: new ObjectId(user._id),
+    })
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Note deleted successfully",
+    })
+  } catch (error) {
+    console.error("Note deletion error:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to delete note",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },

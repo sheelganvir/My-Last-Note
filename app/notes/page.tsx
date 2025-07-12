@@ -26,7 +26,6 @@ interface Note {
   isDelivered: boolean
 }
 
-
 export default function NotesPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isCreatingNote, setIsCreatingNote] = useState(false)
@@ -121,7 +120,7 @@ export default function NotesPage() {
   }
 
   const handleNoteClick = (noteId: string) => {
-    router.push(`/notes/${noteId}/note`)
+    router.push(`/notes/${noteId}`) // Changed from `/notes/${noteId}/note` to `/notes/${noteId}`
   }
 
   const getStatusColor = (status: string) => {
@@ -207,24 +206,6 @@ export default function NotesPage() {
                   <ul className="space-y-6 text-base font-medium tracking-wide lg:flex lg:space-y-0 lg:text-sm">
                     <li>
                       <span className="block text-white font-medium md:px-4">Notes</span>
-                    </li>
-                    <li>
-                      <Link
-                        href="/account"
-                        className="block transition hover:text-teal-400 md:px-4 cursor-pointer"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <span>Your Account</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href="/settings"
-                        className="block transition hover:text-teal-400 md:px-4 cursor-pointer"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <span>Settings</span>
-                      </Link>
                     </li>
                   </ul>
                 </div>

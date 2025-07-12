@@ -226,9 +226,6 @@ export default function NoteEditorPage() {
                   <ArrowLeft className="h-4 w-4" />
                   <span>Back to Notes</span>
                 </Link>
-                <Link href="/account" className="text-slate-300 hover:text-white transition-colors">
-                  Your Account
-                </Link>
               </div>
             </div>
           </div>
@@ -243,10 +240,22 @@ export default function NoteEditorPage() {
               <Link href="/notes" className="px-4 py-2 text-slate-300 hover:text-white transition-colors">
                 All Notes
               </Link>
-              <button className="px-4 py-2 text-slate-300 hover:text-white transition-colors">Overview</button>
+              <Link href={`/notes/${noteId}`} className="px-4 py-2 text-slate-300 hover:text-white transition-colors">
+                Overview
+              </Link>
               <button className="px-4 py-2 bg-teal-500 text-white rounded-md">Note</button>
-              <button className="px-4 py-2 text-slate-300 hover:text-white transition-colors">Recipients</button>
-              <button className="px-4 py-2 text-slate-300 hover:text-white transition-colors">Note Settings</button>
+              <Link
+                href={`/notes/${noteId}/recipients`}
+                className="px-4 py-2 text-slate-300 hover:text-white transition-colors"
+              >
+                Recipients
+              </Link>
+              <Link
+                href={`/notes/${noteId}/settings`}
+                className="px-4 py-2 text-slate-300 hover:text-white transition-colors"
+              >
+                Note Settings
+              </Link>
             </div>
 
             {/* Note ID Display */}
@@ -381,6 +390,7 @@ export default function NoteEditorPage() {
                     onChange={handleFileUpload}
                     className="hidden"
                     accept="image/*,application/pdf,.doc,.docx,.txt"
+                    title="Upload attachments"
                   />
 
                   {uploadedFiles.length > 0 && (
