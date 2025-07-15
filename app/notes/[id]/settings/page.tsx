@@ -290,7 +290,7 @@ export default function NoteSettingsPage() {
 
                 {releaseSettings.releaseMode === "automatically" && (
                   <div className="flex flex-wrap items-center gap-2 text-white ml-4">
-                    <span className="text-slate-300">... if I don't check-in</span>
+                    <span className="text-slate-300">... if I don&apos;t check-in</span>
                     <span className="text-white">for</span>
                     <Select
                       value={releaseSettings.checkInPeriod}
