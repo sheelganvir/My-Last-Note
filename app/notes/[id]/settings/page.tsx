@@ -5,8 +5,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { FileText, ArrowLeft, Clock, Shield, Trash2, AlertCircle } from "lucide-react"
+import { FileText, ArrowLeft, RefreshCw, Shield, Trash2, AlertCircle } from "lucide-react"
 import { UserButton, useUser } from "@clerk/nextjs"
 import { useParams, useRouter } from "next/navigation"
 
@@ -15,11 +14,10 @@ export default function NoteSettingsPage() {
   const router = useRouter()
   const noteId = params.id as string
 
-  const [settings, setSettings] = useState({
-    deliveryTrigger: "automatic",
-    priority: "medium",
-    isActive: true,
-    scheduledDelivery: "",
+  const [releaseSettings, setReleaseSettings] = useState({
+    releaseMode: "automatically", // "automatically" or "never"
+    checkInPeriod: "60 days", // "1 minute", "30 days", "60 days", "90 days"
+    isActive: false,
   })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -41,11 +39,11 @@ export default function NoteSettingsPage() {
         if (response.ok) {
           const data = await response.json()
           if (data.success && data.note) {
-            setSettings({
-              deliveryTrigger: data.note.deliveryTrigger || "automatic",
-              priority: data.note.priority || "medium",
+            // Map existing settings to new format
+            setReleaseSettings({
+              releaseMode: data.note.deliveryTrigger === "automatic" ? "automatically" : "never",
+              checkInPeriod: "60 days", // Default value
               isActive: data.note.status === "saved",
-              scheduledDelivery: data.note.scheduledDelivery || "",
             })
           }
         } else {
@@ -62,9 +60,30 @@ export default function NoteSettingsPage() {
     loadSettings()
   }, [noteId, user])
 
-  const saveSettings = async () => {
+  // Calculate release day based on check-in period
+  const calculateReleaseDay = (period: string) => {
+    const periodMap: { [key: string]: number } = {
+      "1 minute": 0, // For testing - immediate
+      "30 days": 30,
+      "60 days": 60,
+      "90 days": 90,
+    }
+    return periodMap[period] || 60
+  }
+
+  // Get formatted release date text
+  const getReleaseText = () => {
+    const days = calculateReleaseDay(releaseSettings.checkInPeriod)
+    if (days === 0) {
+      return "The note will be released immediately after your last check-in (for testing)."
+    }
+    const suffix = days === 1 ? "st" : days === 2 ? "nd" : days === 3 ? "rd" : "th"
+    return `The note will be released on the ${days}${suffix} day of your last check-in.`
+  }
+
+  const activateNote = async () => {
     if (!user) {
-      alert("Please sign in to save settings")
+      alert("Please sign in to activate note")
       return
     }
 
@@ -80,10 +99,10 @@ export default function NoteSettingsPage() {
         },
         body: JSON.stringify({
           settings: {
-            deliveryTrigger: settings.deliveryTrigger,
-            priority: settings.priority,
-            status: settings.isActive ? "saved" : "draft",
-            scheduledDelivery: settings.scheduledDelivery || null,
+            deliveryTrigger: releaseSettings.releaseMode === "automatically" ? "automatic" : "manual",
+            checkInPeriod: releaseSettings.checkInPeriod,
+            status: "saved", // Activate the note
+            priority: "medium", // Default priority
           },
         }),
       })
@@ -91,15 +110,16 @@ export default function NoteSettingsPage() {
       const result = await response.json()
 
       if (result.success) {
-        setSuccessMessage("Settings saved successfully!")
+        setReleaseSettings({ ...releaseSettings, isActive: true })
+        setSuccessMessage("Note activated successfully!")
         // Clear success message after 3 seconds
         setTimeout(() => setSuccessMessage(null), 3000)
       } else {
-        throw new Error(result.error || "Failed to save settings")
+        throw new Error(result.error || "Failed to activate note")
       }
     } catch (error) {
-      console.error("Error saving settings:", error)
-      setError(error instanceof Error ? error.message : "Failed to save settings")
+      console.error("Error activating note:", error)
+      setError(error instanceof Error ? error.message : "Failed to activate note")
     } finally {
       setIsSaving(false)
     }
@@ -241,60 +261,91 @@ export default function NoteSettingsPage() {
             </div>
           )}
 
-          {/* Delivery Settings */}
+          {/* Release Settings */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center space-x-2">
-                <Clock className="h-5 w-5" />
-                <span>Delivery Settings</span>
+                <RefreshCw className="h-5 w-5" />
+                <span>Release Settings</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Delivery Trigger</label>
-                <Select
-                  value={settings.deliveryTrigger}
-                  onValueChange={(value) => setSettings({ ...settings, deliveryTrigger: value })}
-                >
-                  <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="automatic">Automatic (when you stop checking in)</SelectItem>
-                    <SelectItem value="scheduled">Scheduled delivery</SelectItem>
-                    <SelectItem value="manual">Manual delivery only</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-slate-400">Choose when this note should be delivered to recipients</p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Priority Level</label>
-                <Select
-                  value={settings.priority}
-                  onValueChange={(value) => setSettings({ ...settings, priority: value })}
-                >
-                  <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="low">Low Priority</SelectItem>
-                    <SelectItem value="medium">Medium Priority</SelectItem>
-                    <SelectItem value="high">High Priority</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-slate-400">High priority notes are delivered first</p>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <label className="text-sm font-medium text-white">Active Status</label>
-                  <p className="text-xs text-slate-400">Inactive notes will not be delivered</p>
+              {/* Release Mode and Check-in Period */}
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2 text-white">
+                  <Select
+                    value={releaseSettings.releaseMode}
+                    onValueChange={(value) => setReleaseSettings({ ...releaseSettings, releaseMode: value })}
+                  >
+                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white w-auto min-w-[140px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectItem value="automatically">Automatically</SelectItem>
+                      <SelectItem value="never">Never</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <span className="text-white">release my note...</span>
                 </div>
-                <Switch
-                  checked={settings.isActive}
-                  onCheckedChange={(checked) => setSettings({ ...settings, isActive: checked })}
-                />
+
+                {releaseSettings.releaseMode === "automatically" && (
+                  <div className="flex flex-wrap items-center gap-2 text-white ml-4">
+                    <span className="text-slate-300">... if I don't check-in</span>
+                    <span className="text-white">for</span>
+                    <Select
+                      value={releaseSettings.checkInPeriod}
+                      onValueChange={(value) => setReleaseSettings({ ...releaseSettings, checkInPeriod: value })}
+                    >
+                      <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white w-auto min-w-[120px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-700">
+                        <SelectItem value="1 minute">1 minute</SelectItem>
+                        <SelectItem value="30 days">30 days</SelectItem>
+                        <SelectItem value="60 days">60 days</SelectItem>
+                        <SelectItem value="90 days">90 days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
+              {/* Info Text */}
+              {releaseSettings.releaseMode === "automatically" && (
+                <div className="bg-slate-700/30 rounded-lg p-4">
+                  <p className="text-slate-300 text-sm">{getReleaseText()}</p>
+                </div>
+              )}
+
+              {releaseSettings.releaseMode === "never" && (
+                <div className="bg-slate-700/30 rounded-lg p-4">
+                  <p className="text-slate-300 text-sm">
+                    This note will never be automatically released. You can manually release it at any time.
+                  </p>
+                </div>
+              )}
+
+              {/* Activate Button */}
+              <div className="pt-4">
+                <Button
+                  onClick={activateNote}
+                  disabled={isSaving || releaseSettings.isActive}
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Activating...</span>
+                    </div>
+                  ) : releaseSettings.isActive ? (
+                    <span>Note Activated</span>
+                  ) : (
+                    <span>Activate note</span>
+                  )}
+                </Button>
+                {releaseSettings.isActive && (
+                  <p className="text-green-400 text-sm mt-2">✓ This note is currently active and ready for release</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -362,25 +413,6 @@ export default function NoteSettingsPage() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Save Section */}
-          <div className="flex items-center justify-between">
-            <p className="text-slate-400 text-sm">Changes are saved when you click the save button.</p>
-            <Button
-              onClick={saveSettings}
-              disabled={isSaving}
-              className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSaving ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Saving...</span>
-                </div>
-              ) : (
-                <span>Save Settings</span>
-              )}
-            </Button>
-          </div>
         </div>
       </div>
     </div>
