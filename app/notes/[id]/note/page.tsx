@@ -1,28 +1,16 @@
 "use client"
 
-import type React from "react"
-
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  FileText,
-  Save,
-  Upload,
-  Bold,
-  Italic,
-  Underline,
-  List,
-  ImageIcon,
-  Heart,
-  CheckCircle,
-  ArrowLeft,
-} from "lucide-react"
+import { FileText, Save, Bold, Italic, Underline, List, Heart, CheckCircle, ArrowLeft } from "lucide-react"
 import { useUser } from "@clerk/nextjs"
 import { useParams } from "next/navigation"
+import FileUploadZone from "@/components/FileUploadZone"
+import type { UploadedFile } from "@/lib/cloudinary"
 
 const suggestions = [
   "Important passwords",
@@ -45,10 +33,10 @@ export default function NoteEditorPage() {
   const [sensitiveInfo, setSensitiveInfo] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+
   const [noteExists, setNoteExists] = useState(false)
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const sensitiveAreaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -71,6 +59,7 @@ export default function NoteEditorPage() {
               const content = typeof data.note.content === "string" ? JSON.parse(data.note.content) : data.note.content
               setTextNote(content.textNote || "")
               setSensitiveInfo(content.sensitiveInfo || "")
+              setUploadedFiles(content.attachments || [])
             }
             setNoteExists(true)
           }
@@ -84,15 +73,6 @@ export default function NoteEditorPage() {
 
     loadNote()
   }, [noteId, user])
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    setUploadedFiles((prev) => [...prev, ...files])
-  }
-
-  const removeFile = (index: number) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index))
-  }
 
   const insertTextAtCursor = (textarea: HTMLTextAreaElement, text: string) => {
     const start = textarea.selectionStart
@@ -145,7 +125,6 @@ export default function NoteEditorPage() {
       return
     }
 
-    // Use "Untitled Note" if title is empty or just whitespace
     const finalTitle = title.trim() || "Untitled Note"
 
     if (!finalTitle.trim() || (!textNote.trim() && !sensitiveInfo.trim())) {
@@ -156,27 +135,31 @@ export default function NoteEditorPage() {
     setIsSaving(true)
 
     try {
-      // Prepare form data for file uploads
-      const formData = new FormData()
-      formData.append("noteId", noteId)
-      formData.append("title", finalTitle) // Use the final title
-      formData.append("textNote", textNote)
-      formData.append("sensitiveInfo", sensitiveInfo)
-
-      uploadedFiles.forEach((file, index) => {
-        formData.append(`file_${index}`, file)
-      })
+      // Combine content with Cloudinary files
+      const content = {
+        textNote: textNote || "",
+        sensitiveInfo: sensitiveInfo || "",
+        attachments: uploadedFiles,
+      }
 
       const response = await fetch(`/api/notes/${noteId}`, {
         method: "PUT",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          noteId,
+          title: finalTitle,
+          content,
+          status: "saved",
+        }),
       })
 
       const result = await response.json()
 
       if (result.success) {
         alert("Note saved successfully!")
-        setTitle(finalTitle) // Update the local title state
+        setTitle(finalTitle)
         setNoteExists(true)
       } else {
         alert(`Failed to save note: ${result.error}`)
@@ -372,48 +355,17 @@ export default function NoteEditorPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-medium text-white">Attachments:</h3>
-                    <Button
-                      onClick={() => fileInputRef.current?.click()}
-                      size="sm"
-                      variant="outline"
-                      className="border-slate-600 text-slate-300 hover:bg-slate-700 cursor-pointer bg-transparent"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Files
-                    </Button>
+                    <Link href="#" className="text-teal-400 text-sm hover:text-teal-300">
+                      Powered by Cloudinary
+                    </Link>
                   </div>
 
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    accept="image/*,application/pdf,.doc,.docx,.txt"
-                    title="Upload attachments"
+                  <FileUploadZone
+                    files={uploadedFiles}
+                    onFilesChange={setUploadedFiles}
+                    maxFiles={10}
+                    disabled={isSaving}
                   />
-
-                  {uploadedFiles.length > 0 && (
-                    <div className="space-y-2">
-                      {uploadedFiles.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between bg-slate-700/50 rounded-lg p-3">
-                          <div className="flex items-center space-x-2">
-                            <ImageIcon className="h-4 w-4 text-slate-400" />
-                            <span className="text-sm text-white">{file.name}</span>
-                            <span className="text-xs text-slate-400">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
-                          </div>
-                          <Button
-                            onClick={() => removeFile(index)}
-                            size="sm"
-                            variant="ghost"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-900/20 cursor-pointer"
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>

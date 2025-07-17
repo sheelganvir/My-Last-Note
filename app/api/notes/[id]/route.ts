@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { getUserByClerkId } from "@/lib/userService"
 import { getDatabase } from "@/lib/mongodb"
-import { type Recipient } from "@/lib/Note"
 import { ObjectId } from "mongodb"
 
 export async function GET(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
@@ -79,34 +78,10 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
     }
 
     const contentType = request.headers.get("content-type")
-
-    interface UpdateData {
-      recipients?: Recipient[];
-      title?: string;
-      status?: string;
-      content?: {
-        textNote: string;
-        sensitiveInfo: string;
-        attachments: Attachment[];
-      };
-      isEncrypted?: boolean;
-      deliveryTrigger?: "manual" | "automatic" | "scheduled";
-      scheduledDelivery?: Date;
-      tags?: string[];
-      priority?: "low" | "medium" | "high";
-    }
-
-    interface Attachment {
-      name: string;
-      type: string;
-      size: number;
-      data: string;
-    }
-
-    let updateData: UpdateData = {}
+    let updateData: any = {}
 
     if (contentType?.includes("application/json")) {
-      // Handle JSON requests (for recipients and settings updates)
+      // Handle JSON requests (for both content and recipients/settings updates)
       const body = await request.json()
 
       if (body.recipients !== undefined) {
@@ -124,8 +99,12 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
       if (body.status !== undefined) {
         updateData.status = body.status
       }
+
+      if (body.content !== undefined) {
+        updateData.content = JSON.stringify(body.content)
+      }
     } else {
-      // Handle FormData requests (for note content updates)
+      // Handle FormData requests (legacy support)
       const formData = await request.formData()
       const title = formData.get("title") as string
       const textNote = formData.get("textNote") as string
@@ -135,7 +114,7 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
         return NextResponse.json({ error: "Title is required" }, { status: 400 })
       }
 
-      // Handle file uploads
+      // Handle file uploads (legacy)
       const files: File[] = []
       const fileEntries = Array.from(formData.entries()).filter(([key]) => key.startsWith("file_"))
 
@@ -145,7 +124,7 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
         }
       }
 
-      // Process files
+      // Process files (legacy base64 storage)
       const attachments = await Promise.all(
         files.map(async (file) => {
           const bytes = await file.arrayBuffer()
@@ -170,7 +149,7 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
 
       updateData = {
         title,
-        content,
+        content: JSON.stringify(content),
         status: "saved",
       }
     }
