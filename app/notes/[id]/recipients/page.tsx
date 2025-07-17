@@ -5,9 +5,10 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, ArrowLeft, Users, Plus, Trash2, Mail, AlertCircle, Send } from "lucide-react"
+import { FileText, ArrowLeft, Users, Plus, Trash2, Mail, AlertCircle } from "lucide-react"
 import { UserButton, useUser } from "@clerk/nextjs"
 import { useParams } from "next/navigation"
+import DatabaseStatus from "@/components/DatabaseStatus"
 
 interface Recipient {
   name: string
@@ -313,25 +314,12 @@ export default function RecipientsPage() {
                   <Users className="h-5 w-5" />
                   <span>Recipients ({recipients.length})</span>
                 </div>
-                {recipients.length > 0 && (
-                  <Button
-                    onClick={sendTestEmail}
-                    disabled={isSendingTest}
-                    variant="outline"
-                    className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white cursor-pointer bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSendingTest ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                        <span>Sending...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-2">
-                        <Send className="h-4 w-4" />
-                        <span>Send Test Email</span>
-                      </div>
-                    )}
-                  </Button>
+                {process.env.NODE_ENV === "development" && (
+                  <DatabaseStatus
+                    isSendingTest={isSendingTest}
+                    sendTestEmail={sendTestEmail}
+                    hasRecipients={recipients.length > 0}
+                  />
                 )}
               </CardTitle>
             </CardHeader>

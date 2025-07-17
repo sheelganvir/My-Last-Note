@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       })
       .toArray()
 
-    const deliveryResults: any[] = []
-    const reminderResults: any[] = []
+    const deliveryResults: unknown[] = []
+    const reminderResults: unknown[] = []
 
     for (const user of users) {
       const lastCheckIn = new Date(user.lastCheckIn)
