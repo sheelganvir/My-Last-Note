@@ -35,35 +35,7 @@ export default function FileUploadZone({ files, onFilesChange, maxFiles = 10, di
     setIsDragOver(false)
   }, [])
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault()
-      setIsDragOver(false)
-
-      if (disabled) return
-
-      const droppedFiles = Array.from(e.dataTransfer.files)
-      handleFileUpload(droppedFiles)
-    },
-    [disabled],
-  )
-
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (disabled) return
-
-      const selectedFiles = Array.from(e.target.files || [])
-      handleFileUpload(selectedFiles)
-
-      // Reset input value to allow selecting the same file again
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
-    },
-    [disabled],
-  )
-
-  const handleFileUpload = async (filesToUpload: File[]) => {
+  const handleFileUpload = useCallback(async (filesToUpload: File[]) => {
     if (files.length + filesToUpload.length > maxFiles) {
       setUploadErrors([`Maximum ${maxFiles} files allowed`])
       return
@@ -96,7 +68,35 @@ export default function FileUploadZone({ files, onFilesChange, maxFiles = 10, di
     if (successfulUploads.length > 0) {
       onFilesChange([...files, ...successfulUploads])
     }
-  }
+  }, [files, maxFiles, onFilesChange]);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragOver(false)
+
+      if (disabled) return
+
+      const droppedFiles = Array.from(e.dataTransfer.files)
+      handleFileUpload(droppedFiles)
+    },
+    [disabled, handleFileUpload],
+  )
+
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return
+
+      const selectedFiles = Array.from(e.target.files || [])
+      handleFileUpload(selectedFiles)
+
+      // Reset input value to allow selecting the same file again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
+    },
+    [disabled, handleFileUpload],
+  )
 
   const removeFile = (fileId: string) => {
     onFilesChange(files.filter((file) => file.id !== fileId))

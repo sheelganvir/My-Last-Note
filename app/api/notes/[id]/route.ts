@@ -60,6 +60,14 @@ export async function GET(request: NextRequest, { params: paramsPromise }: { par
   }
 }
 
+interface UpdateData {
+  recipients?: string[];
+  settings?: Record<string, unknown>;
+  title?: string;
+  status?: string;
+  content?: string;
+}
+
 export async function PUT(request: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const params = await paramsPromise
   try {
@@ -78,7 +86,7 @@ export async function PUT(request: NextRequest, { params: paramsPromise }: { par
     }
 
     const contentType = request.headers.get("content-type")
-    let updateData: any = {}
+    let updateData: UpdateData = {}
 
     if (contentType?.includes("application/json")) {
       // Handle JSON requests (for both content and recipients/settings updates)
