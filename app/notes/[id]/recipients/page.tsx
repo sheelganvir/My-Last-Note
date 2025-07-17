@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, ArrowLeft, Users, Plus, Trash2, Mail, AlertCircle } from "lucide-react"
+import { FileText, ArrowLeft, Users, Plus, Trash2, Mail, AlertCircle, Send } from "lucide-react"
 import { UserButton, useUser } from "@clerk/nextjs"
 import { useParams } from "next/navigation"
 
@@ -23,6 +23,7 @@ export default function RecipientsPage() {
   const [newRecipient, setNewRecipient] = useState({ name: "", email: "", relationship: "" })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [isSendingTest, setIsSendingTest] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
@@ -116,6 +117,52 @@ export default function RecipientsPage() {
       setError(error instanceof Error ? error.message : "Failed to save recipients")
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const sendTestEmail = async () => {
+    if (!user) {
+      alert("Please sign in to send test emails")
+      return
+    }
+
+    if (recipients.length === 0) {
+      alert("Please add at least one recipient before sending a test email")
+      return
+    }
+
+    setIsSendingTest(true)
+    setError(null)
+    setSuccessMessage(null)
+
+    try {
+      const response = await fetch("/api/send-note-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          noteId,
+          recipients,
+          noteUrl: `${window.location.origin}/view-note/${noteId}`,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setSuccessMessage(`Test email sent successfully to ${result.results.successful.length} recipient(s)!`)
+        if (result.results.failed.length > 0) {
+          setError(`Failed to send to ${result.results.failed.length} recipient(s)`)
+        }
+      } else {
+        throw new Error(result.error || "Failed to send test email")
+      }
+    } catch (error) {
+      console.error("Error sending test email:", error)
+      setError(error instanceof Error ? error.message : "Failed to send test email")
+    } finally {
+      setIsSendingTest(false)
     }
   }
 
@@ -261,9 +308,31 @@ export default function RecipientsPage() {
           {/* Recipients List */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white flex items-center space-x-2">
-                <Users className="h-5 w-5" />
-                <span>Recipients ({recipients.length})</span>
+              <CardTitle className="text-white flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="h-5 w-5" />
+                  <span>Recipients ({recipients.length})</span>
+                </div>
+                {recipients.length > 0 && (
+                  <Button
+                    onClick={sendTestEmail}
+                    disabled={isSendingTest}
+                    variant="outline"
+                    className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white cursor-pointer bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSendingTest ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        <span>Sending...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-2">
+                        <Send className="h-4 w-4" />
+                        <span>Send Test Email</span>
+                      </div>
+                    )}
+                  </Button>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
