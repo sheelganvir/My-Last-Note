@@ -31,7 +31,7 @@ export async function sendNoteDeliveryEmail({
   deliveredAt: Date
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@lastnote.live"
 
     const { data, error } = await resend.emails.send({
       from: `My Last Note <${fromEmail}>`,
@@ -74,7 +74,7 @@ export async function sendCheckInReminderEmail({
   daysRemaining: number
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@lastnote.live"
 
     const { data, error } = await resend.emails.send({
       from: `My Last Note <${fromEmail}>`,
