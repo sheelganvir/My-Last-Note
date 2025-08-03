@@ -314,13 +314,13 @@ export default function RecipientsPage() {
                   <Users className="h-5 w-5" />
                   <span>Recipients ({recipients.length})</span>
                 </div>
-                
+                {process.env.NODE_ENV === "development" && (
                   <DatabaseStatus
                     isSendingTest={isSendingTest}
                     sendTestEmail={sendTestEmail}
                     hasRecipients={recipients.length > 0}
                   />
-                
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
